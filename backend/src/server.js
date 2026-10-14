@@ -35,6 +35,14 @@ app.get("/api/health", async (req, res) => {
 });
 app.use("/api/auth", authRoutes);
 
+const {verifyToken, allowRoles} =require("./middleware/authMiddleware");
+
+app.get("/api/admin/test", verifyToken, allowRoles("ADMIN"), (req, res) => {
+    res.json({
+        message: "Admin access successful"
+    });
+});
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
