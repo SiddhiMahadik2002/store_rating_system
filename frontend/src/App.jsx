@@ -10,6 +10,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import StoreOwnerDashboard from "./pages/StoreOwnerDashboard";
+
 
 function App() {
   return (
@@ -20,6 +22,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/user" element={<UserDashboard />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/owner" element={<StoreOwnerDashboard />} />
 
         <Route
           path="/admin"
