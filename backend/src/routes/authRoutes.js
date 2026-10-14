@@ -133,4 +133,68 @@ router.post("/login", async (req, res) => {
     }
 });
 
+const { verifyToken } = require("../middleware/authMiddleware");
+
+// Change password for any logged-in user
+router.put("/change-password", verifyToken, async (req, res) => {
+    try {
+        const { oldPassword, newPassword } = req.body;
+
+        if (!oldPassword || !newPassword) {
+            return res.status(400).json({
+                message: "Both old and new passwords are required"
+            });
+        }
+
+        if (
+            newPassword.length < 8 ||
+            newPassword.length > 16 ||
+            !/[A-Z]/.test(newPassword) ||
+            !/[^A-Za-z0-9]/.test(newPassword)
+        ) {
+            return res.status(400).json({
+                message: "Password must be 8-16 characters with an uppercase letter and a special character"
+            });
+        }
+
+        const [users] = await pool.execute(
+            "SELECT password FROM users WHERE id = ?",
+            [req.user.id]
+        );
+
+        if (users.length === 0) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        const isMatch = await bcrypt.compare(
+            oldPassword,
+            users[0].password
+        );
+
+        if (!isMatch) {
+            return res.status(400).json({
+                message: "Old password is incorrect"
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        await pool.execute(
+            "UPDATE users SET password = ? WHERE id = ?",
+            [hashedPassword, req.user.id]
+        );
+
+        res.json({
+            message: "Password changed successfully"
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Failed to change password"
+        });
+    }
+});
+
 module.exports = router;

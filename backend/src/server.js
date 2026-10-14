@@ -6,7 +6,9 @@ const pool = require("./config/db");
 
 const app = express();
 const authRoutes = require("./routes/authRoutes");
-
+const adminRoutes = require("./routes/adminRoutes");
+const ratingRoutes = require("./routes/ratingRoutes");
+const ownerRoutes = require("./routes/ownerRoutes");
 
 app.use(cors());
 app.use(express.json());
@@ -42,6 +44,9 @@ app.get("/api/admin/test", verifyToken, allowRoles("ADMIN"), (req, res) => {
         message: "Admin access successful"
     });
 });
+app.use("/api/admin", adminRoutes);
+app.use("/api", ratingRoutes);
+app.use("/api/owner", ownerRoutes);
 
 const PORT = process.env.PORT || 5000;
 
