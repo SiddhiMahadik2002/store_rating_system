@@ -148,5 +148,99 @@ router.post("/stores", async (req, res) => {
         res.status(500).json({ message: "Failed to create store" });
     }
 });
+router.get("/users/:id", async (req, res) => {
+    try {
+        const userId = Number(req.params.id);
+
+        if (!Number.isInteger(userId) || userId <= 0) {
+            return res.status(400).json({
+                message: "Invalid user ID"
+            });
+        }
+
+        const [users] = await pool.execute(
+            `SELECT id, name, email, address, role, created_at
+             FROM users
+             WHERE id = ?`,
+            [userId]
+        );
+
+        if (users.length === 0) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        const [ratings] = await pool.execute(
+            `SELECT
+                s.id AS storeId,
+                s.name AS storeName,
+                r.rating,
+                r.updated_at AS ratedAt
+             FROM ratings r
+             JOIN stores s ON s.id = r.store_id
+             WHERE r.user_id = ?
+             ORDER BY s.name ASC`,
+            [userId]
+        );
+
+        res.json({
+            user: users[0],
+            ratings: ratings
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Failed to fetch user details"
+        });
+    }
+});
+router.get("/users/:id", async (req, res) => {
+    try {
+        const userId = Number(req.params.id);
+
+        if (!Number.isInteger(userId) || userId <= 0) {
+            return res.status(400).json({
+                message: "Invalid user ID"
+            });
+        }
+
+        const [users] = await pool.execute(
+            `SELECT id, name, email, address, role, created_at
+             FROM users
+             WHERE id = ?`,
+            [userId]
+        );
+
+        if (users.length === 0) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        const [ratings] = await pool.execute(
+            `SELECT
+                s.id AS storeId,
+                s.name AS storeName,
+                r.rating,
+                r.updated_at AS ratedAt
+             FROM ratings r
+             JOIN stores s ON s.id = r.store_id
+             WHERE r.user_id = ?
+             ORDER BY s.name ASC`,
+            [userId]
+        );
+
+        res.json({
+            user: users[0],
+            ratings: ratings
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Failed to fetch user details"
+        });
+    }
+});
 
 module.exports = router;
