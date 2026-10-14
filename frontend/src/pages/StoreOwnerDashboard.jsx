@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 function StoreOwnerDashboard() {
   const [data, setData] = useState({ stores: [], ratings: [] });

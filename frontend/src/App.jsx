@@ -11,6 +11,7 @@ import Register from "./pages/Register";
 import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import StoreOwnerDashboard from "./pages/StoreOwnerDashboard";
+import ChangePassword from "./pages/ChangePassword";
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         <Route path="/user" element={<UserDashboard />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/owner" element={<StoreOwnerDashboard />} />
+<Route path="/change-password" element={<ChangePassword />} />
 
         <Route
           path="/admin"

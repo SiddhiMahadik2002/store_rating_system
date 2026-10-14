@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -145,6 +146,7 @@ function AdminDashboard() {
   return (
     <div style={{ padding: "30px", fontFamily: "Arial" }}>
       <h1>Admin Dashboard</h1>
+      <Link to="/change-password">Change Password</Link>
       <button onClick={logout}>Logout</button>
       <button onClick={loadDashboard} style={{ marginLeft: 10 }}>
         Refresh
