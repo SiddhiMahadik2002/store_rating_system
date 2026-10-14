@@ -12,6 +12,7 @@ import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import StoreOwnerDashboard from "./pages/StoreOwnerDashboard";
 import ChangePassword from "./pages/ChangePassword";
+import UserDetails from "./pages/UserDetails";
 
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
           path="/owner"
           element={<h2>Store Owner Dashboard - Coming Soon</h2>}
         />
+        <Route path="/admin/users/:id" element={<UserDetails />} />
         
       </Routes>
     </BrowserRouter>

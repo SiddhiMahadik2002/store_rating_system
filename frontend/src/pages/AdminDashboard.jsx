@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -15,7 +16,11 @@ function AdminDashboard() {
 
   const [userSearch, setUserSearch] = useState("");
   const [storeSearch, setStoreSearch] = useState("");
-
+const [userSortBy, setUserSortBy] = useState("name");
+const [userOrder, setUserOrder] = useState("ASC");
+const navigate = useNavigate();
+const [storeSortBy, setStoreSortBy] = useState("name");
+const [storeOrder, setStoreOrder] = useState("ASC");
   const [newUser, setNewUser] = useState({
     name: "",
     email: "",
@@ -57,7 +62,10 @@ function AdminDashboard() {
       const [dashboard, userList, storeList] = await Promise.all([
         api("/api/admin/dashboard"),
         api("/api/admin/users"),
-        api("/api/admin/stores")
+        api("/api/admin/stores"),
+        api(`/api/admin/users?sortBy=${userSortBy}&order=${userOrder}`),
+
+api(`/api/admin/stores?sortBy=${storeSortBy}&order=${storeOrder}`)
       ]);
 
       setStats(dashboard);
@@ -69,9 +77,9 @@ function AdminDashboard() {
     }
   }
 
-  useEffect(() => {
+ useEffect(() => {
     loadDashboard();
-  }, []);
+}, [userSortBy, userOrder, storeSortBy, storeOrder]);
 
   async function createUser(e) {
     e.preventDefault();
@@ -271,6 +279,43 @@ function AdminDashboard() {
       </form>
 
       <hr />
+      <h3>Users</h3>
+
+<select
+    value={userSortBy}
+    onChange={(e) => setUserSortBy(e.target.value)}
+>
+    <option value="name">Name</option>
+    <option value="email">Email</option>
+    <option value="address">Address</option>
+    <option value="role">Role</option>
+</select>
+
+<select
+    value={userOrder}
+    onChange={(e) => setUserOrder(e.target.value)}
+>
+    <option value="ASC">Ascending</option>
+    <option value="DESC">Descending</option>
+</select>
+<h3>Stores</h3>
+
+<select
+    value={storeSortBy}
+    onChange={(e) => setStoreSortBy(e.target.value)}
+>
+    <option value="name">Name</option>
+    <option value="email">Email</option>
+    <option value="address">Address</option>
+</select>
+
+<select
+    value={storeOrder}
+    onChange={(e) => setStoreOrder(e.target.value)}
+>
+    <option value="ASC">Ascending</option>
+    <option value="DESC">Descending</option>
+</select>
 
       <h2>Users</h2>
       <input
@@ -298,6 +343,11 @@ function AdminDashboard() {
                 <td>{user.email}</td>
                 <td>{user.address}</td>
                 <td>{user.role}</td>
+                <td>
+    <button onClick={() => navigate(`/admin/users/${user.id}`)}>
+        View Details
+    </button>
+</td>
               </tr>
             ))}
           </tbody>
